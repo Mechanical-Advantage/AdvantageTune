@@ -1,0 +1,18 @@
+// Copyright (c) 2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by a BSD
+// license that can be found in the LICENSE file
+// at the root directory of this project.
+
+import SwiftUI
+
+struct ContentView: View {
+  var body: some View {
+    MainTabView()
+  }
+}
+
+#Preview {
+  ContentView()
+}
