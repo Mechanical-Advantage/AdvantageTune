@@ -661,7 +661,8 @@ public struct StructLeafEditor: View {
 
     case .float(let f):
       DoubleLeafEditor(
-        label: label, verbatimLabel: verbatimLabel, topicPath: topicPath, value: Double(f), isFloat: true, showStepPicker: true
+        label: label, verbatimLabel: verbatimLabel, topicPath: topicPath, value: Double(f), isFloat: true,
+        showStepPicker: true
       ) { newD in
         onCommit(.float(Float(newD)))
       }
