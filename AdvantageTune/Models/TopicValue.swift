@@ -333,7 +333,7 @@ extension Double {
     let rounded = (self * 1e12).rounded() / 1e12
     let val = abs(self - rounded) < 1e-13 ? rounded : self
     let s = val.formatted(.number.grouping(.never))
-    if s == "-0" || s == "-0.0" { return "0" }
+    if s == "-0" || s == "-0.0" || s == "-0,0" { return "0" }
     return s
   }
 }
@@ -349,7 +349,7 @@ extension Float {
     let rounded = (d * 1e6).rounded() / 1e6
     let val = abs(d - rounded) < 1e-7 ? rounded : d
     let s = val.formatted(.number.grouping(.never))
-    if s == "-0" || s == "-0.0" { return "0" }
+    if s == "-0" || s == "-0.0" || s == "-0,0" { return "0" }
     return s
   }
 }

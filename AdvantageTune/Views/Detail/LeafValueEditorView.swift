@@ -127,11 +127,10 @@ public struct DoubleLeafEditor: View {
             }
           )
         ) {
-          Text("0.001").tag(0.001)
-          Text("0.01").tag(0.01)
-          Text("0.1").tag(0.1)
-          Text("1.0").tag(1.0)
-          Text("10").tag(10.0)
+          ForEach(Self.stepOptions, id: \.value) { option in
+            Text(verbatim: Self.formatStepSize(option.value))
+              .tag(option.value)
+          }
         }
         .pickerStyle(.segmented)
       }
@@ -157,13 +156,25 @@ public struct DoubleLeafEditor: View {
     }
   }
 
+  private static let stepOptions: [(value: Double, fractionLength: Int)] = [
+    (0.001, 3),
+    (0.01, 2),
+    (0.1, 1),
+    (1.0, 1),
+    (10.0, 0),
+  ]
+
+  private static func formatStepSize(_ size: Double) -> String {
+    if let match = stepOptions.first(where: { abs($0.value - size) < 1e-6 }) {
+      return match.value.formatted(
+        .number.precision(.fractionLength(match.fractionLength)).grouping(.never)
+      )
+    }
+    return size.formatted(.number.grouping(.never))
+  }
+
   private var formattedStep: String {
-    if stepSize == 0.001 { return "0.001" }
-    if stepSize == 0.01 { return "0.01" }
-    if stepSize == 0.1 { return "0.1" }
-    if stepSize == 1.0 { return "1.0" }
-    if stepSize == 10.0 { return "10" }
-    return stepSize.formatted(.number.grouping(.never))
+    Self.formatStepSize(stepSize)
   }
 
   private func applyStep(_ delta: Double) -> Double {
