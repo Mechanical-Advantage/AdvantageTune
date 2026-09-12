@@ -27,4 +27,3 @@ AdvantageTune uses Apple's `swift-format` tool (bundled with Xcode) for code for
 
 - Run `./format.sh` to automatically format all Swift files in-place.
 - Run `./format.sh --check` to verify that all Swift files are properly formatted (this check runs automatically in CI).
-

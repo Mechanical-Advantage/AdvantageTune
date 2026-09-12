@@ -18,7 +18,7 @@ public struct RawTelemetryView: View {
     self.fallbackValue = fallbackValue
   }
 
-  private var rawTelemetryLabel: String {
+  private var rawTelemetryLabelKey: LocalizedStringKey {
     if topic.type.hasPrefix("proto:") || topic.isProtobuf {
       return "Protobuf Value"
     } else if topic.type.hasPrefix("struct:") || topic.isStruct {
@@ -31,7 +31,7 @@ public struct RawTelemetryView: View {
   public var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       HStack {
-        Label(rawTelemetryLabel, systemImage: "memorychip")
+        Label(rawTelemetryLabelKey, systemImage: "memorychip")
           .font(.subheadline.weight(.medium))
           .foregroundColor(.secondary)
         Spacer()

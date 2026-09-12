@@ -10,7 +10,8 @@ import SwiftUI
 // MARK: - Double & Float Leaf Editor
 
 public struct DoubleLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let topicPath: String?
   public let value: Double
   public let isFloat: Bool
@@ -23,7 +24,8 @@ public struct DoubleLeafEditor: View {
   @FocusState private var isFocused: Bool
 
   public init(
-    label: String? = nil,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     topicPath: String? = nil,
     value: Double,
     isFloat: Bool = false,
@@ -32,6 +34,7 @@ public struct DoubleLeafEditor: View {
     onCommit: @escaping (Double) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.topicPath = topicPath
     self.value = value
     self.isFloat = isFloat
@@ -61,6 +64,7 @@ public struct DoubleLeafEditor: View {
     VStack(alignment: .leading, spacing: 10) {
       LeafEditorContainer(
         label: label,
+        verbatimLabel: verbatimLabel,
         isFocused: isFocused,
         onDelete: onDelete,
         onCommit: {
@@ -209,7 +213,8 @@ public struct DoubleLeafEditor: View {
 // MARK: - Integer Leaf Editor
 
 public struct IntLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let value: Int64
   public let isUnsigned: Bool
   public let onDelete: (() -> Void)?
@@ -219,13 +224,15 @@ public struct IntLeafEditor: View {
   @FocusState private var isFocused: Bool
 
   public init(
-    label: String? = nil,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     value: Int64,
     isUnsigned: Bool = false,
     onDelete: (() -> Void)? = nil,
     onCommit: @escaping (Int64) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.value = value
     self.isUnsigned = isUnsigned
     self.onDelete = onDelete
@@ -237,6 +244,7 @@ public struct IntLeafEditor: View {
     VStack(alignment: .leading, spacing: 10) {
       LeafEditorContainer(
         label: label,
+        verbatimLabel: verbatimLabel,
         isFocused: isFocused,
         onDelete: onDelete,
         onCommit: {
@@ -309,18 +317,21 @@ public struct IntLeafEditor: View {
 // MARK: - Boolean Leaf Editor
 
 public struct BoolLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let value: Bool
   public let onDelete: (() -> Void)?
   public let onCommit: (Bool) -> Void
 
   public init(
-    label: String? = nil,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     value: Bool,
     onDelete: (() -> Void)? = nil,
     onCommit: @escaping (Bool) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.value = value
     self.onDelete = onDelete
     self.onCommit = onCommit
@@ -338,6 +349,9 @@ public struct BoolLeafEditor: View {
       ) {
         if let label = label {
           Text(label)
+            .foregroundColor(.secondary)
+        } else if let verbatimLabel = verbatimLabel {
+          Text(verbatim: verbatimLabel)
             .foregroundColor(.secondary)
         }
       }
@@ -364,7 +378,8 @@ public struct BoolLeafEditor: View {
 // MARK: - String Leaf Editor
 
 public struct StringLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let value: String
   public let onDelete: (() -> Void)?
   public let onCommit: (String) -> Void
@@ -373,12 +388,14 @@ public struct StringLeafEditor: View {
   @FocusState private var isFocused: Bool
 
   public init(
-    label: String? = nil,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     value: String,
     onDelete: (() -> Void)? = nil,
     onCommit: @escaping (String) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.value = value
     self.onDelete = onDelete
     self.onCommit = onCommit
@@ -388,6 +405,7 @@ public struct StringLeafEditor: View {
   public var body: some View {
     LeafEditorContainer(
       label: label,
+      verbatimLabel: verbatimLabel,
       isFocused: isFocused,
       onDelete: onDelete,
       onCommit: {
@@ -511,7 +529,8 @@ struct EnumMenuButton: UIViewRepresentable {
 // MARK: - Enum Leaf Editor
 
 public struct EnumLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let name: String
   public let rawValue: Int64
   public let options: [Int64: String]
@@ -519,7 +538,8 @@ public struct EnumLeafEditor: View {
   public let onCommit: (String, Int64) -> Void
 
   public init(
-    label: String? = nil,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     name: String,
     rawValue: Int64,
     options: [Int64: String],
@@ -527,6 +547,7 @@ public struct EnumLeafEditor: View {
     onCommit: @escaping (String, Int64) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.name = name
     self.rawValue = rawValue
     self.options = options
@@ -552,6 +573,11 @@ public struct EnumLeafEditor: View {
     HStack {
       if let label = label {
         Text(label)
+          .foregroundColor(.secondary)
+          .lineLimit(1)
+          .truncationMode(.tail)
+      } else if let verbatimLabel = verbatimLabel {
+        Text(verbatim: verbatimLabel)
           .foregroundColor(.secondary)
           .lineLimit(1)
           .truncationMode(.tail)
@@ -599,16 +625,21 @@ public struct EnumLeafEditor: View {
 // MARK: - Struct Leaf Editor
 
 public struct StructLeafEditor: View {
-  public let label: String?
+  public let label: LocalizedStringKey?
+  public let verbatimLabel: String?
   public let topicPath: String?
   public let value: StructValue
   public let onCommit: (StructValue) -> Void
 
   public init(
-    label: String? = nil, topicPath: String? = nil, value: StructValue,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
+    topicPath: String? = nil,
+    value: StructValue,
     onCommit: @escaping (StructValue) -> Void
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.topicPath = topicPath
     self.value = value
     self.onCommit = onCommit
@@ -617,41 +648,41 @@ public struct StructLeafEditor: View {
   public var body: some View {
     switch value {
     case .bool(let b):
-      BoolLeafEditor(label: label, value: b) { newB in
+      BoolLeafEditor(label: label, verbatimLabel: verbatimLabel, value: b) { newB in
         onCommit(.bool(newB))
       }
 
     case .double(let d):
       DoubleLeafEditor(
-        label: label, topicPath: topicPath, value: d, isFloat: false, showStepPicker: true
+        label: label, verbatimLabel: verbatimLabel, topicPath: topicPath, value: d, isFloat: false, showStepPicker: true
       ) { newD in
         onCommit(.double(newD))
       }
 
     case .float(let f):
       DoubleLeafEditor(
-        label: label, topicPath: topicPath, value: Double(f), isFloat: true, showStepPicker: true
+        label: label, verbatimLabel: verbatimLabel, topicPath: topicPath, value: Double(f), isFloat: true, showStepPicker: true
       ) { newD in
         onCommit(.float(Float(newD)))
       }
 
     case .int(let i):
-      IntLeafEditor(label: label, value: i, isUnsigned: false) { newI in
+      IntLeafEditor(label: label, verbatimLabel: verbatimLabel, value: i, isUnsigned: false) { newI in
         onCommit(.int(newI))
       }
 
     case .uint(let u):
-      IntLeafEditor(label: label, value: Int64(u), isUnsigned: true) { newI in
+      IntLeafEditor(label: label, verbatimLabel: verbatimLabel, value: Int64(u), isUnsigned: true) { newI in
         onCommit(.uint(UInt64(max(0, newI))))
       }
 
     case .string(let s):
-      StringLeafEditor(label: label, value: s) { newS in
+      StringLeafEditor(label: label, verbatimLabel: verbatimLabel, value: s) { newS in
         onCommit(.string(newS))
       }
 
     case .enumValue(let name, let rawVal, let options):
-      EnumLeafEditor(label: label, name: name, rawValue: rawVal, options: options) {
+      EnumLeafEditor(label: label, verbatimLabel: verbatimLabel, name: name, rawValue: rawVal, options: options) {
         newName, newI in
         onCommit(.enumValue(name: newName, rawValue: newI, options: options))
       }

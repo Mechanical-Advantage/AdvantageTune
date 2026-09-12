@@ -90,7 +90,7 @@ public struct FolderListView: View {
         .listStyle(.insetGrouped)
       }
     }
-    .navigationTitle(isRoot ? "Browse" : (node?.name ?? ""))
+    .navigationTitle(isRoot ? Text("Browse") : Text(verbatim: node?.name ?? ""))
     .navigationBarTitleDisplayMode(isRoot ? .large : .inline)
   }
 }

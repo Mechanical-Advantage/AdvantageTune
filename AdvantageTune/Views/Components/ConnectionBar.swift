@@ -55,7 +55,7 @@ public struct ConnectionBar: View {
           }
         } label: {
           let isActive = store.isConnectionRequested || store.connectionStatus.isConnected
-          Text(isActive ? "Disconnect" : "Connect")
+          Text(isActive ? "Disconnect" : "Connect" as LocalizedStringKey)
             .font(.subheadline.weight(.semibold))
             .foregroundColor(isActive ? .red : .accentColor)
             .padding(.horizontal, 12)
@@ -80,7 +80,7 @@ public struct ConnectionBar: View {
             .fill(statusColor)
             .frame(width: 8, height: 8)
 
-          Text(statusText)
+          statusTextView
             .font(.caption.weight(.medium))
             .foregroundColor(.secondary)
             .contentTransition(.identity)
@@ -114,18 +114,20 @@ public struct ConnectionBar: View {
     }
   }
 
-  private var statusText: String {
+  @ViewBuilder
+  private var statusTextView: some View {
     switch store.connectionStatus {
     case .connected(let latencyMs):
       if latencyMs > 0 {
-        return String(format: "Connected (%.1f ms)", latencyMs)
+        let formattedLatency = latencyMs.formatted(.number.precision(.fractionLength(1)))
+        Text("Connected (\(formattedLatency) ms)")
       } else {
-        return "Connected"
+        Text("Connected")
       }
     case .connecting:
-      return "Connecting to \(store.serverHost)..."
+      Text("Connecting to \(store.serverHost)...")
     case .disconnected:
-      return "Disconnected"
+      Text("Disconnected")
     }
   }
 }

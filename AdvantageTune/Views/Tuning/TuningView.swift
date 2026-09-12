@@ -16,11 +16,13 @@ public struct TuningView: View {
   }
 
   private var formattedShareText: String {
-    guard !entries.isEmpty else { return "No tuned values." }
+    guard !entries.isEmpty else {
+      return String(localized: "No tuned values.")
+    }
 
     let dateStr = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .medium)
     var lines: [String] = [
-      "AdvantageTune Values (\(dateStr))",
+      String(localized: "AdvantageTune Values (\(dateStr))"),
       "",
     ]
 

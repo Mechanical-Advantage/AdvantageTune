@@ -149,7 +149,8 @@ public struct TopicDetailView: View {
           }
         } header: {
           Text(
-            topic.type.hasPrefix("proto:") || topic.isProtobuf ? "Protobuf Fields" : "Struct Fields"
+            topic.type.hasPrefix("proto:") || topic.isProtobuf
+              ? "Protobuf Fields" : "Struct Fields" as LocalizedStringKey
           )
         } footer: {
           if !topic.isImmutable {
@@ -294,7 +295,8 @@ public struct TopicDetailView: View {
 
     } else if type == "double" {
       DoubleLeafEditor(
-        label: "Local Value", topicPath: topic.name, value: doubleValue, isFloat: false
+        label: "Local Value", topicPath: topic.name, value: doubleValue,
+        isFloat: false
       ) { newDouble in
         doubleValue = newDouble
         applyUpdate(.double(newDouble))
@@ -302,14 +304,17 @@ public struct TopicDetailView: View {
 
     } else if type == "float" {
       DoubleLeafEditor(
-        label: "Local Value", topicPath: topic.name, value: doubleValue, isFloat: true
+        label: "Local Value", topicPath: topic.name, value: doubleValue,
+        isFloat: true
       ) { newDouble in
         doubleValue = newDouble
         applyUpdate(.float(Float(newDouble)))
       }
 
     } else if type == "int" {
-      IntLeafEditor(label: "Local Value", value: intValue, isUnsigned: false) { newInt in
+      IntLeafEditor(
+        label: "Local Value", value: intValue, isUnsigned: false
+      ) { newInt in
         intValue = newInt
         applyUpdate(.int(newInt))
       }

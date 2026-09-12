@@ -55,9 +55,10 @@ public enum TopicValue: Equatable, Hashable, CustomStringConvertible, Sendable {
     case .structValue(_, let structVal, _):
       return structVal.formattedSummary
     case .protoRaw(let typeName, let data):
-      return "\(typeName) (\(data.count) bytes)"
+      let formattedBytes = String(localized: "\(data.count) bytes")
+      return "\(typeName) (\(formattedBytes))"
     case .raw(let data):
-      return "\(data.count) bytes"
+      return String(localized: "\(data.count) bytes")
     case .unsupported(let desc):
       return desc
     }
@@ -193,9 +194,10 @@ public enum TopicValue: Equatable, Hashable, CustomStringConvertible, Sendable {
     case .structValue(_, let structVal, _):
       return structVal
     case .protoRaw(_, let data):
-      return .string("Protobuf (\(data.count) bytes)")
+      let formattedBytes = String(localized: "\(data.count) bytes")
+      return .string("Protobuf (\(formattedBytes))")
     case .raw(let data):
-      return .string("\(data.count) bytes")
+      return .string(String(localized: "\(data.count) bytes"))
     case .unsupported(let desc):
       return .string(desc)
     }

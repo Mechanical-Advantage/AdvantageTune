@@ -8,20 +8,23 @@
 import SwiftUI
 
 public struct LeafEditorContainer<Input: View>: View {
-  let label: String?
+  let label: LocalizedStringKey?
+  let verbatimLabel: String?
   let isFocused: Bool
   let onDelete: (() -> Void)?
   let onCommit: () -> Void
   let input: Input
 
   public init(
-    label: String?,
+    label: LocalizedStringKey? = nil,
+    verbatimLabel: String? = nil,
     isFocused: Bool,
     onDelete: (() -> Void)?,
     onCommit: @escaping () -> Void,
     @ViewBuilder input: () -> Input
   ) {
     self.label = label
+    self.verbatimLabel = verbatimLabel
     self.isFocused = isFocused
     self.onDelete = onDelete
     self.onCommit = onCommit
@@ -32,6 +35,11 @@ public struct LeafEditorContainer<Input: View>: View {
     HStack {
       if let label = label {
         Text(label)
+          .foregroundColor(.secondary)
+          .lineLimit(1)
+          .truncationMode(.tail)
+      } else if let verbatimLabel = verbatimLabel {
+        Text(verbatim: verbatimLabel)
           .foregroundColor(.secondary)
           .lineLimit(1)
           .truncationMode(.tail)

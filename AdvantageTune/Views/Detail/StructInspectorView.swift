@@ -87,7 +87,7 @@ public struct StructInspectorView: View {
     default:
       if isEditable {
         StructLeafEditor(
-          label: parentKey.isEmpty ? nil : parentKey, topicPath: parentKey, value: value
+          verbatimLabel: parentKey.isEmpty ? nil : parentKey, topicPath: parentKey, value: value
         ) { newLeaf in
           onUpdate?(newLeaf)
         }
@@ -189,7 +189,7 @@ private struct StructFieldRow: View {
 
     default:
       if isEditable {
-        StructLeafEditor(label: key, topicPath: path, value: value) { newLeaf in
+        StructLeafEditor(verbatimLabel: key, topicPath: path, value: value) { newLeaf in
           onUpdate?(newLeaf)
         }
         .padding(.vertical, 2)
@@ -208,7 +208,7 @@ private struct StructFieldRow: View {
               .background(Color.purple.opacity(0.12))
               .clipShape(Capsule())
           } else if case .bool(let b) = value {
-            Text(b ? "true" : "false")
+            Text(b ? "true" : "false" as LocalizedStringKey)
               .font(.system(.subheadline, design: .monospaced).weight(.semibold))
               .foregroundColor(b ? .accentColor : .secondary)
           } else {

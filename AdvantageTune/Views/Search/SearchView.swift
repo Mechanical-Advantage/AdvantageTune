@@ -9,13 +9,33 @@ import SwiftUI
 
 public struct SearchView: View {
   @Bindable var store: NTStore
-  @State private var searchText: String = ""
-  @State private var selectedTypeFilter: String = "All"
+  public enum FilterOption: String, CaseIterable, Identifiable {
+    case all = "All"
+    case numeric = "Numeric"
+    case boolean = "Boolean"
+    case string = "String"
+    case arrays = "Arrays"
+    case structProto = "Struct/Proto"
 
-  private let filterOptions = ["All", "Numeric", "Boolean", "String", "Arrays", "Struct/Proto"]
+    public var id: String { rawValue }
+
+    public var titleKey: LocalizedStringKey {
+      switch self {
+      case .all: return "All"
+      case .numeric: return "Numeric"
+      case .boolean: return "Boolean"
+      case .string: return "String"
+      case .arrays: return "Arrays"
+      case .structProto: return "Struct/Proto"
+      }
+    }
+  }
+
+  @State private var searchText: String = ""
+  @State private var selectedTypeFilter: FilterOption = .all
 
   private var filteredTopics: [NT4Topic] {
-    store.searchTopics(query: searchText, filter: selectedTypeFilter, limit: 100)
+    store.searchTopics(query: searchText, filter: selectedTypeFilter.rawValue, limit: 100)
   }
 
   public var body: some View {
@@ -29,14 +49,14 @@ public struct SearchView: View {
         // Filter picker
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 8) {
-            ForEach(filterOptions, id: \.self) { filter in
+            ForEach(FilterOption.allCases) { filter in
               Button {
                 if selectedTypeFilter != filter {
                   Haptics.selection()
                   selectedTypeFilter = filter
                 }
               } label: {
-                Text(filter)
+                Text(filter.titleKey)
                   .font(.subheadline.weight(.medium))
                   .padding(.horizontal, 12)
                   .padding(.vertical, 6)
@@ -62,16 +82,21 @@ public struct SearchView: View {
 
         // Results
         if filteredTopics.isEmpty {
-          ContentUnavailableView(
-            searchText.isEmpty ? "Search Topics" : "No Results for “\(searchText)”",
-            systemImage: "magnifyingglass",
-            description: Text(
-              searchText.isEmpty
-                ? "Find a NetworkTables topic by name."
-                : "Check the spelling or try a new search."
+          if searchText.isEmpty {
+            ContentUnavailableView(
+              "Search Topics",
+              systemImage: "magnifyingglass",
+              description: Text("Find a NetworkTables topic by name.")
             )
-          )
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+          } else {
+            ContentUnavailableView(
+              "No Results for “\(searchText)”",
+              systemImage: "magnifyingglass",
+              description: Text("Check the spelling or try a new search.")
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+          }
         } else {
           List {
             Section {
