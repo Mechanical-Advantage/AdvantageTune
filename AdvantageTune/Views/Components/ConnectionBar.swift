@@ -21,10 +21,10 @@ public struct ConnectionBar: View {
             .font(.subheadline)
 
           TextField("Server IP or Hostname", text: $store.serverHost)
-            .textInputAutocapitalization(.never)
+            .textInputAutocapitalizationNeverCompat()
             .autocorrectionDisabled(true)
-            .keyboardType(.asciiCapable)
-            .submitLabel(.done)
+            .keyboardTypeCompat(.asciiCapable)
+            .submitLabelDoneCompat()
             .focused($isHostFocused)
             .onSubmit {
               store.reconnect()
@@ -42,7 +42,7 @@ public struct ConnectionBar: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .background(Color(.secondarySystemBackground))
+        .background(Color.secondary.opacity(0.12))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
         // Connect / disconnect button
@@ -100,7 +100,7 @@ public struct ConnectionBar: View {
     .padding(.horizontal)
     .padding(.top, 4)
     .padding(.bottom, 6)
-    .background(Color(.systemBackground))
+    .background(.background)
   }
 
   private var statusColor: Color {

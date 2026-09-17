@@ -119,13 +119,13 @@ public struct TuningView: View {
               Text("Tuned Values (\(entries.count))")
             }
           }
-          .listStyle(.insetGrouped)
+          .listStyleInsetGroupedCompat()
         }
       }
       .navigationTitle("Tuning")
-      .navigationBarTitleDisplayMode(.large)
+      .navigationTitleDisplayModeCompat(.large)
       .toolbar {
-        ToolbarItem(placement: .topBarTrailing) {
+        ToolbarItem(placement: .primaryAction) {
           if !entries.isEmpty {
             HStack(spacing: 20) {
               ShareLink(item: formattedShareText) {

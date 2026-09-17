@@ -34,7 +34,7 @@ public struct BrowseView: View {
         }
       }
       .navigationTitle("Browse")
-      .navigationBarTitleDisplayMode(.large)
+      .navigationTitleDisplayModeCompat(.large)
       .navigationDestination(for: TopicNode.self) { node in
         switch node {
         case .folder:

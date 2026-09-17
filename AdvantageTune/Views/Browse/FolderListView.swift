@@ -87,10 +87,10 @@ public struct FolderListView: View {
             }
           }
         }
-        .listStyle(.insetGrouped)
+        .listStyleInsetGroupedCompat()
       }
     }
     .navigationTitle(isRoot ? Text("Browse") : Text(verbatim: node?.name ?? ""))
-    .navigationBarTitleDisplayMode(isRoot ? .large : .inline)
+    .navigationTitleDisplayModeCompat(isRoot ? .large : .inline)
   }
 }

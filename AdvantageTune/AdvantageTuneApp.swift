@@ -12,6 +12,12 @@ struct AdvantageTuneApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
+        #if os(macOS)
+        .frame(minWidth: 800, minHeight: 520)
+        #endif
     }
+    #if os(macOS)
+    .defaultSize(width: 960, height: 640)
+    #endif
   }
 }

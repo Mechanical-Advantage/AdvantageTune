@@ -53,7 +53,7 @@ public struct LeafEditorContainer<Input: View>: View {
       .frame(minWidth: 70)
       .padding(.horizontal, 8)
       .padding(.vertical, 3)
-      .background(Color(.tertiarySystemFill))
+      .background(Color.secondary.opacity(0.15))
       .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
       .overlay(
         RoundedRectangle(cornerRadius: 6, style: .continuous)

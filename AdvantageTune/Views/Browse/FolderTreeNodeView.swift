@@ -58,7 +58,7 @@ public struct FolderTreeNodeView: View {
             .font(.caption2.weight(.bold))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Color(.systemGray5))
+            .background(Color.secondary.opacity(0.15))
             .foregroundColor(.secondary)
             .clipShape(Capsule())
         }

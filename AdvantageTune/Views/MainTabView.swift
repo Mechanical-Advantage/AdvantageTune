@@ -8,8 +8,12 @@
 import SwiftUI
 
 public struct MainTabView: View {
-  @State private var store = NTStore()
+  @Bindable var store: NTStore
   @State private var selectedTab: AppTab = .browse
+
+  public init(store: NTStore? = nil) {
+    self.store = store ?? NTStore()
+  }
 
   public enum AppTab: String, CaseIterable, Identifiable, Hashable {
     case browse = "Browse"

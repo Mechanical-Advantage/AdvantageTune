@@ -65,13 +65,13 @@ public struct TopicContextMenuModifier: ViewModifier {
       if let rawData = rawData {
         Button {
           let hex = rawData.map { String(format: "%02X", $0) }.joined(separator: " ")
-          UIPasteboard.general.string = hex
+          Clipboard.copy(hex)
         } label: {
           Label("Copy Value", systemImage: "doc.on.clipboard")
         }
       } else if let val = value {
         Button {
-          UIPasteboard.general.string = val.fullString
+          Clipboard.copy(val.fullString)
         } label: {
           Label("Copy Value", systemImage: "doc.on.clipboard")
         }
@@ -79,7 +79,7 @@ public struct TopicContextMenuModifier: ViewModifier {
 
       if !topicName.isEmpty {
         Button {
-          UIPasteboard.general.string = topicName
+          Clipboard.copy(topicName)
         } label: {
           Label("Copy Key", systemImage: "doc.on.doc")
         }

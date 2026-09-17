@@ -230,7 +230,7 @@ public struct TopicDetailView: View {
       }
     }
     .navigationTitle(topic.name.split(separator: "/").last.map(String.init) ?? topic.name)
-    .navigationBarTitleDisplayMode(.inline)
+    .navigationTitleDisplayModeCompat(.inline)
     .onAppear {
       store.acquireSubscription(for: topic.name)
       syncLocalStateWithLatest()

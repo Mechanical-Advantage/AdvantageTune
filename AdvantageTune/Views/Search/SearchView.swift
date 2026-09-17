@@ -63,7 +63,7 @@ public struct SearchView: View {
                   .background(
                     selectedTypeFilter == filter
                       ? Color.accentColor
-                      : Color(.secondarySystemBackground)
+                      : Color.secondary.opacity(0.12)
                   )
                   .foregroundColor(
                     selectedTypeFilter == filter ? .white : .primary
@@ -76,7 +76,7 @@ public struct SearchView: View {
           .padding(.horizontal, 16)
           .padding(.vertical, 8)
         }
-        .background(Color(.systemBackground))
+        .background(.background)
 
         Divider()
 
@@ -110,11 +110,11 @@ public struct SearchView: View {
               Text("Results (\(filteredTopics.count))")
             }
           }
-          .listStyle(.insetGrouped)
+          .listStyleInsetGroupedCompat()
         }
       }
       .navigationTitle("Search")
-      .navigationBarTitleDisplayMode(.large)
+      .navigationTitleDisplayModeCompat(.large)
       .searchable(text: $searchText, placement: .automatic, prompt: "Search topics...")
     }
   }

@@ -40,7 +40,7 @@ public struct RawTelemetryView: View {
             .font(.system(.caption, design: .monospaced).weight(.bold))
             .padding(.horizontal, 6)
             .padding(.vertical, 2)
-            .background(Color(.tertiarySystemFill))
+            .background(Color.secondary.opacity(0.15))
             .clipShape(Capsule())
         } else {
           Text("Waiting for value...")

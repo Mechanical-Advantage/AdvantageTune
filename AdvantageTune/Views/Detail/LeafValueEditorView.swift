@@ -74,7 +74,7 @@ public struct DoubleLeafEditor: View {
       ) {
         TextField("0.0", value: $localValue, format: .number.grouping(.never))
           .focused($isFocused)
-          .keyboardType(.numbersAndPunctuation)
+          .keyboardTypeCompat(.numbersAndPunctuation)
           .multilineTextAlignment(.trailing)
           .font(.system(.subheadline, design: .monospaced).weight(.semibold))
           .onSubmit {
@@ -93,7 +93,7 @@ public struct DoubleLeafEditor: View {
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
-            .background(Color(.tertiarySystemFill))
+            .background(Color.secondary.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.borderless)
@@ -107,7 +107,7 @@ public struct DoubleLeafEditor: View {
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
-            .background(Color(.tertiarySystemFill))
+            .background(Color.secondary.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.borderless)
@@ -254,7 +254,7 @@ public struct IntLeafEditor: View {
       ) {
         TextField("0", value: $localValue, format: .number.grouping(.never))
           .focused($isFocused)
-          .keyboardType(isUnsigned ? .numberPad : .numbersAndPunctuation)
+          .keyboardTypeCompat(isUnsigned ? .numberPad : .numbersAndPunctuation)
           .multilineTextAlignment(.trailing)
           .font(.system(.subheadline, design: .monospaced).weight(.semibold))
           .onSubmit {
@@ -274,7 +274,7 @@ public struct IntLeafEditor: View {
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
-            .background(Color(.tertiarySystemFill))
+            .background(Color.secondary.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.borderless)
@@ -288,7 +288,7 @@ public struct IntLeafEditor: View {
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 8)
-            .background(Color(.tertiarySystemFill))
+            .background(Color.secondary.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.borderless)
@@ -443,86 +443,41 @@ public struct StringLeafEditor: View {
 
 // MARK: - Enum Menu Button
 
-struct EnumMenuButton: UIViewRepresentable {
+struct EnumMenuButton: View {
   let title: String
   let options: [(key: Int64, value: String)]
   let selectedKey: Int64
   let onSelect: (String, Int64) -> Void
 
-  final class Coordinator {
-    var options: [(key: Int64, value: String)] = []
-    var selectedKey: Int64 = 0
-    var onSelect: ((String, Int64) -> Void)?
-  }
-
-  func makeCoordinator() -> Coordinator {
-    Coordinator()
-  }
-
-  func makeUIView(context: Context) -> UIButton {
-    let button = UIButton(type: .system)
-    button.showsMenuAsPrimaryAction = true
-    button.setContentHuggingPriority(.required, for: .horizontal)
-    button.setContentCompressionResistancePriority(.required, for: .horizontal)
-    button.setContentHuggingPriority(.required, for: .vertical)
-    button.setContentCompressionResistancePriority(.required, for: .vertical)
-
-    let coordinator = context.coordinator
-    coordinator.options = options
-    coordinator.selectedKey = selectedKey
-    coordinator.onSelect = onSelect
-
-    button.menu = UIMenu(children: [
-      UIDeferredMenuElement.uncached { [weak coordinator] completion in
-        guard let coordinator = coordinator else {
-          completion([])
-          return
-        }
-        let currentKey = coordinator.selectedKey
-        let actions = coordinator.options.map { opt in
-          UIAction(
-            title: "\(opt.value) (\(opt.key))",
-            state: opt.key == currentKey ? .on : .off
-          ) { _ in
-            Haptics.selection()
-            DispatchQueue.main.async {
-              coordinator.onSelect?(opt.value, opt.key)
+  var body: some View {
+    Menu {
+      ForEach(options, id: \.key) { opt in
+        Button {
+          Haptics.selection()
+          onSelect(opt.value, opt.key)
+        } label: {
+          HStack {
+            Text("\(opt.value) (\(opt.key))")
+            if opt.key == selectedKey {
+              Image(systemName: "checkmark")
             }
           }
         }
-        completion(actions)
       }
-    ])
-
-    updateButtonConfiguration(button)
-    return button
-  }
-
-  func updateUIView(_ button: UIButton, context: Context) {
-    context.coordinator.options = options
-    context.coordinator.selectedKey = selectedKey
-    context.coordinator.onSelect = onSelect
-
-    updateButtonConfiguration(button)
-  }
-
-  private func updateButtonConfiguration(_ button: UIButton) {
-    var config = UIButton.Configuration.tinted()
-    config.baseBackgroundColor = .systemPurple
-    config.baseForegroundColor = .systemPurple
-    config.cornerStyle = .capsule
-    config.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-
-    let chevronConfig = UIImage.SymbolConfiguration(pointSize: 9, weight: .bold)
-    config.image = UIImage(systemName: "chevron.up.chevron.down", withConfiguration: chevronConfig)
-    config.imagePlacement = .trailing
-    config.imagePadding = 5
-
-    var attrTitle = AttributedString(title)
-    attrTitle.font = .monospacedSystemFont(ofSize: 13, weight: .semibold)
-    config.attributedTitle = attrTitle
-
-    button.configuration = config
+    } label: {
+      HStack(spacing: 5) {
+        Text(title)
+          .font(.system(size: 13, weight: .semibold, design: .monospaced))
+        Image(systemName: "chevron.up.chevron.down")
+          .font(.system(size: 9, weight: .bold))
+      }
+      .padding(.horizontal, 10)
+      .padding(.vertical, 5)
+      .foregroundColor(.purple)
+      .background(Color.purple.opacity(0.15))
+      .clipShape(Capsule())
+    }
+    .buttonStyle(.plain)
   }
 }
 
