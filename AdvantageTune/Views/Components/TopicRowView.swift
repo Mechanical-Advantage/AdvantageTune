@@ -12,17 +12,20 @@ public struct TopicRowView: View {
   public let topic: NT4Topic
   public var title: String? = nil
   public var isPublished: Bool = false
+  public var isSelected: Bool = false
 
   public init(
     store: NTStore,
     topic: NT4Topic,
     title: String? = nil,
-    isPublished: Bool = false
+    isPublished: Bool = false,
+    isSelected: Bool = false
   ) {
     self.store = store
     self.topic = topic
     self.title = title
     self.isPublished = isPublished
+    self.isSelected = isSelected
   }
 
   private var displayTitle: String {

@@ -10,10 +10,16 @@ import SwiftUI
 public struct FolderListView: View {
   @Bindable var store: NTStore
   public let node: TopicNode?
+  @Binding var selectedTopic: NT4Topic?
 
-  public init(store: NTStore, node: TopicNode? = nil) {
+  public init(
+    store: NTStore,
+    node: TopicNode? = nil,
+    selectedTopic: Binding<NT4Topic?> = .constant(nil)
+  ) {
     self.store = store
     self.node = node
+    self._selectedTopic = selectedTopic
   }
 
   private var isRoot: Bool {
@@ -58,17 +64,22 @@ public struct FolderListView: View {
           .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
       } else {
-        List {
+        List(selection: $selectedTopic) {
           // Keys
           if !topics.isEmpty {
             Section {
               ForEach(topics) { child in
                 if let topic = child.topic {
                   let isPublished = store.isPublished(topicName: topic.name)
-                  NavigationLink(value: child) {
-                    TopicRowView(
-                      store: store, topic: topic, title: child.name, isPublished: isPublished)
-                  }
+
+                  TopicRowView(
+                    store: store,
+                    topic: topic,
+                    title: child.name,
+                    isPublished: isPublished,
+                    isSelected: false
+                  )
+                  .tag(topic)
                 }
               }
             } header: {
@@ -80,7 +91,28 @@ public struct FolderListView: View {
           if !subfolders.isEmpty {
             Section {
               ForEach(subfolders) { child in
-                FolderTreeNodeView(store: store, node: child)
+                NavigationLink(value: child) {
+                  HStack(spacing: 10) {
+                    Image(systemName: "folder.fill")
+                      .foregroundColor(.accentColor)
+                      .font(.body)
+
+                    Text(child.name)
+                      .font(.body.weight(.medium))
+                      .foregroundColor(.primary)
+
+                    Spacer()
+
+                    let count = (store.node(for: child.path) ?? child).children.count
+                    Text("\(count)")
+                      .font(.caption2.weight(.bold))
+                      .padding(.horizontal, 6)
+                      .padding(.vertical, 2)
+                      .background(Color(.systemGray5))
+                      .foregroundColor(.secondary)
+                      .clipShape(Capsule())
+                  }
+                }
               }
             } header: {
               Text("Tables (\(subfolders.count))")
@@ -88,6 +120,14 @@ public struct FolderListView: View {
           }
         }
         .listStyle(.insetGrouped)
+        .onAppear {
+          let topicNames = topics.compactMap { $0.topic?.name }
+          store.acquireSubscriptions(for: topicNames)
+        }
+        .onDisappear {
+          let topicNames = topics.compactMap { $0.topic?.name }
+          store.releaseSubscriptions(for: topicNames)
+        }
       }
     }
     .navigationTitle(isRoot ? Text("Browse") : Text(verbatim: node?.name ?? ""))

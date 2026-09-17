@@ -156,6 +156,16 @@ public struct DoubleLeafEditor: View {
           as? Double
       {
         stepSize = saved
+      } else {
+        if let global =
+          (UserDefaults.standard.object(forKey: UserDefaultsKeys.defaultStepSize)
+          ?? UserDefaults.standard.object(forKey: "preferredDoubleStepSize")) as? Double
+        {
+          stepSize = global
+        } else {
+          stepSize = 0.1
+        }
+
       }
     }
   }
