@@ -20,12 +20,7 @@ public struct TuningView: View {
       return String(localized: "No tuned values.")
     }
 
-    let dateStr = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .medium)
-    var lines: [String] = [
-      String(localized: "AdvantageTune Values (\(dateStr))"),
-      "",
-    ]
-
+    var lines: [String] = []
     for entry in entries {
       lines.append("\(entry.topicPath) = \(entry.currentValue.fullString)")
     }
