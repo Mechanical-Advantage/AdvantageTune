@@ -34,6 +34,7 @@ public struct MainTabView: View {
         SearchView(store: store)
       }
     }
+    .tabViewSearchActivation(.searchTabSelection)
     .tabViewStyle(.sidebarAdaptable)
     .onAppear {
       store.connect()
