@@ -46,16 +46,18 @@ public struct DoubleLeafEditor: View {
     let initialStep: Double
     if let path = topicPath,
       let saved = UserDefaults.standard.object(forKey: UserDefaultsKeys.stepSize(for: path))
-        as? Double
+        as? Double,
+      Self.stepOptions.contains(where: { $0.value == saved })
     {
       initialStep = saved
     } else if let global =
       (UserDefaults.standard.object(forKey: UserDefaultsKeys.defaultStepSize)
-      ?? UserDefaults.standard.object(forKey: "preferredDoubleStepSize")) as? Double
+      ?? UserDefaults.standard.object(forKey: "preferredDoubleStepSize")) as? Double,
+      Self.stepOptions.contains(where: { $0.value == global })
     {
       initialStep = global
     } else {
-      initialStep = 0.1
+      initialStep = 1.0
     }
     _stepSize = State(initialValue: initialStep)
   }
@@ -153,7 +155,8 @@ public struct DoubleLeafEditor: View {
     .onChange(of: topicPath) { _, newPath in
       if let path = newPath,
         let saved = UserDefaults.standard.object(forKey: UserDefaultsKeys.stepSize(for: path))
-          as? Double
+          as? Double,
+        Self.stepOptions.contains(where: { $0.value == saved })
       {
         stepSize = saved
       }
@@ -161,11 +164,11 @@ public struct DoubleLeafEditor: View {
   }
 
   private static let stepOptions: [(value: Double, fractionLength: Int)] = [
-    (0.001, 3),
     (0.01, 2),
     (0.1, 1),
     (1.0, 1),
     (10.0, 0),
+    (100.0, 0),
   ]
 
   private static func formatStepSize(_ size: Double) -> String {
@@ -184,9 +187,7 @@ public struct DoubleLeafEditor: View {
   private func applyStep(_ delta: Double) -> Double {
     let raw = localValue + delta
     let precision: Double
-    if stepSize == 0.001 {
-      precision = 1000
-    } else if stepSize == 0.01 {
+    if stepSize == 0.01 {
       precision = 100
     } else if stepSize == 0.1 {
       precision = 10
@@ -194,6 +195,8 @@ public struct DoubleLeafEditor: View {
       precision = 1
     } else if stepSize == 10.0 {
       precision = 0.1
+    } else if stepSize == 100.0 {
+      precision = 0.01
     } else {
       precision = 1_000_000
     }
